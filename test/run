@@ -1,0 +1,20 @@
+#!/usr/bin/env node
+
+var css = require('../index'),
+    fs = require('fs'),
+    path = require('path'),
+    truth = fs.readFileSync(path.join(__dirname, 'style.js'), { encoding: 'utf8' });
+
+var test = function (file) {
+    css.parse(file, function (err, result) {
+        if (err) {
+            console.error(err);
+        } else {
+            console.log(file, result === truth ? 'passed' : 'failed');
+        }
+    });
+};
+
+test('./test/style.css');
+test('./test/style.less');
+test('./test/style.scss');

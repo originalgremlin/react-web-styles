@@ -1,0 +1,30 @@
+$color: #FFF;
+$margin: 2;
+
+#first {
+    flex: 12;
+    margin: $margin;
+    font-size: 18;
+    text-align: center;
+    color: $color;
+}
+
+.second {
+    padding: 5;
+    margin-top: 65;
+    align-items: center;
+}
+
+.third .fourth .fifth {
+    alignItems: flex-start;
+    backgroundColor: #000;
+    borderBottomLeftRadius: 10;
+}
+
+sixth {
+    foo: bar;
+    padding: '5';
+    align-items: junk;
+    margin: 10 20 30 40;
+    color: 100;
+}

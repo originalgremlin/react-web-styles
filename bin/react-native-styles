@@ -1,0 +1,63 @@
+#!/usr/bin/env node
+
+var css = require('../index'),
+    fs = require('fs'),
+	path = require('path'),
+    watch = require('watch'),
+    util = require('util');
+
+var argv = require('minimist')(process.argv.slice(2), {
+	string: ['input', 'output'],
+	default: {
+		input: '.',
+		output: '.'
+	},
+	unknown: function (param) {
+		return false;
+	}
+});
+
+var input = path.resolve(argv['input']);
+
+var parse = function (file) {
+    var outfile = getOutfile(file);
+    css.parse(file, function (err, result) {
+        if (err) {
+            console.log(util.format('Error compiling %s: %s', file, err));
+        } else {
+            fs.writeFile(outfile, result, { encoding: 'utf8' }, function (err) {
+                if (err) {
+                    console.log(util.format('Error writing %s: %s', file, err));
+                } else {
+                    console.log(util.format('Compiled %s', file));
+                }
+            });
+        }
+    });
+};
+
+var getOutfile = function (infile) {
+    var outfile = path.resolve(argv['output'], path.relative(input, infile)),
+        ext = path.extname(infile),
+        js = outfile.slice(0, -ext.length) + '.js';
+    return js;
+};
+
+watch.createMonitor(input, {}, function (monitor) {
+    console.log('Watching for changes on:', input);
+    console.log('Type "Ctrl + C" to exit.');
+
+    monitor.on('created', function (file, stat) {
+        parse(file);
+    });
+
+    monitor.on('changed', function (file, curr, prev) {
+        parse(file);
+    });
+
+    monitor.on('removed', function (file, stat) {
+        var outfile = getOutfile(file);
+        console.log('Deleting ' + outfile);
+        fs.unlink(outfile);
+    });
+});

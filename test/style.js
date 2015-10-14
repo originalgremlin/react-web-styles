@@ -1,4 +1,4 @@
-module.exports = require('react-native').StyleSheet.create({
+module.exports = {
     "first": {
         "flex": 12,
         "margin": 2,
@@ -17,7 +17,10 @@ module.exports = require('react-native').StyleSheet.create({
         "borderBottomLeftRadius": 10
     },
     "sixth": {
-        "margin": 10,
-        "color": "100"
+        "foo": "bar",
+        "padding": "'5'",
+        "alignItems": "junk",
+        "margin": "10 20 30 40",
+        "color": 100
     }
-});
+};

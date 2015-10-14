@@ -7,8 +7,9 @@ var css = require('../index'),
     util = require('util');
 
 var argv = require('minimist')(process.argv.slice(2), {
-	string: ['input', 'output'],
+	string: ['files', 'input', 'output'],
 	default: {
+        files: '.*',
 		input: '.',
 		output: '.'
 	},
@@ -17,7 +18,8 @@ var argv = require('minimist')(process.argv.slice(2), {
 	}
 });
 
-var input = path.resolve(argv['input']);
+var input = path.resolve(argv['input']),
+    files = new RegExp(argv['files']);
 
 var parse = function (file) {
     var outfile = getOutfile(file);
@@ -43,7 +45,11 @@ var getOutfile = function (infile) {
     return js;
 };
 
-watch.createMonitor(input, {}, function (monitor) {
+watch.createMonitor(input, {
+    filter: function (file) {
+        return files.test(file);
+    }
+}, function (monitor) {
     console.log('Watching for changes on:', input);
     console.log('Type "Ctrl + C" to exit.');
 
